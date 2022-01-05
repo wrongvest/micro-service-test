@@ -1,0 +1,53 @@
+server:
+  port: 8050
+
+spring:
+  application:
+    name: service-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.31.163:8848
+        group: service-group
+        namespace: service
+      config:
+        server-addr: 192.168.31.163:8848
+        group: service-group
+        namespace: service
+        refresh-enabled: true
+        shared-configs:
+          - group: service-group
+            datatId: application.yml
+            namespace: service
+          - group: service-group
+            datatId: sentinel.json
+            namespace: service
+    sentinel:
+      transport:
+        dashboard: 127.0.0.1:8080
+        port: 8719
+      datasource:
+        flow-rulers:
+          nacos:
+            server-addr: 192.168.31.163:8848
+            namespace: service
+            dataId: ${spring.application.name}-flow-rules
+            groupId: service-group
+            data-type: json
+            rule-type: flow
+    gateway:
+      enabled: true
+      discovery:
+        locator:
+          lower-case-service-id: true
+      routes:
+        - id: service-order
+          uri: lb://service-order
+          predicates:
+            - Path=/order/**
+        - id: service-user
+          uri: lb://service-user
+          predicates:
+            - Path=/user/**
+#          filters:
+#            - RewritePath=/httpbin/(?<segment>.*), /$\{segment}
