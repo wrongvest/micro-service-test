@@ -19,13 +19,25 @@ spring:
           - group: service-group
             datatId: application.yml
             namespace: service
-          - group: service-group
-            datatId: sentinel.json
-            namespace: service
+#          - group: service-group
+#            datatId: sentinel.json
+#            namespace: service
     sentinel:
       transport:
         dashboard: 127.0.0.1:8080
         port: 8719
+      scg:
+        enabled: true
+        order: -2147483648 # 过滤器顺序，默认为 -2147483648 最高优先级
+        fallback:
+          mode:  # fallback 模式，目前有三种：response、redirect、空
+          # 对应 response 模式
+          response-status: 429 # 响应状态码，默认为 429
+          response-body: This request is blocked by sentinel111. # 响应内容，默认为空
+          content-type: application/json # 内容类型，默认为 application/json
+
+          # 对应 redirect 模式
+#          redirect: http://www.baidu.com
       datasource:
         flow-rulers:
           nacos:
@@ -35,6 +47,22 @@ spring:
             groupId: service-group
             data-type: json
             rule-type: flow
+        gw-flow:
+          nacos:
+            server-addr: 192.168.31.163:8848
+            namespace: service
+            dataId: ${spring.application.name}-gw-flow
+            groupId: service-group
+            data-type: json
+            rule-type: gw-flow
+#        gw-api-group:
+#          nacos:
+#            server-addr: 192.168.31.163:8848
+#            namespace: service
+#            dataId: ${spring.application.name}-gw-flow
+#            groupId: service-group
+#            data-type: json
+#            rule-type: gw-flow
     gateway:
       enabled: true
       discovery:

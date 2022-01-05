@@ -1,0 +1,23 @@
+[
+  {
+    "apiName": "order_customized_api",
+    "predicateItems": [
+      {
+        "pattern": "/order/**",
+        "matchStrategy": 1
+      },
+      {
+        "items": [
+          {
+            "pattern": "/Dubbo/good-collection/",
+            "matchStrategy": 0
+          },
+          {
+            "pattern": "/SkyWalking/**",
+            "matchStrategy": 1
+          }
+        ]
+      }
+    ]
+  }
+]

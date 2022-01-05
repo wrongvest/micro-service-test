@@ -1,0 +1,10 @@
+[
+  {
+    "resource": "service-order",
+    "count": 1
+  },
+  {
+    "resource": "service-user",
+    "count": 1
+  }
+]
